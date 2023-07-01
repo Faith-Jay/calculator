@@ -36,6 +36,7 @@ h1{
     align-items: flex-end;
     justify-content: space-between;
     border: 1px solid gray;
+    overflow: hidden;
 }
 .calc-process{
     font-size: 1.2rem;
@@ -63,4 +64,11 @@ button:hover{
 }
 .mb{
     margin-top: 40px;
+}
+
+@media screen and (max-width: 450px){
+    main{
+        width: 100vw;
+        height: 100vh;
+    }
 }
