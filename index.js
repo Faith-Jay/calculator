@@ -7,7 +7,7 @@ const exponentBtn = document.querySelector('.exponent-btn')
 const clearBtn= document.querySelector('.clear-btn')
 const backspaceBtn = document.querySelector('.backspace-btn')
 const decimalBtn = document.querySelector('.decimal-btn')
-
+const plusMinusBtn =  document.querySelector('.plus-minus-btn')
 let firstVariable 
 let secondVariable
 let operator 
@@ -64,9 +64,18 @@ function exponential2 (a){
  function calculate (){
     getOperator()
     equalToBtn.addEventListener('click', ()=>{
-        if (firstVariable === undefined || secondVariable === 0 || operator === undefined){
-            return
-        }
+        // if (firstVariable === undefined || secondVariable === 0 || operator === undefined){
+        //     return
+        // }
+        // if(firstVariable > 100000000000 || secondVariable > 100000000000){
+        //     calcProcessDisplay.textContent = ""
+        //     displayContent.textContent = "Dey Play!"
+        //     return
+        // } else if (secondVariable === 0 && operator === divide){
+        //     calcProcessDisplay.textContent = ""
+        //     displayContent.textContent = "Dey Play!😏"
+        //     return
+        // } 
        secondVariable = Number(displayContent.textContent) 
        calcProcessDisplay.textContent += ` ${secondVariable} =`
        const result = operate(firstVariable, secondVariable, operator)
@@ -89,7 +98,34 @@ backspaceBtn.addEventListener('click', ()=>{
    let str = displayContent.textContent
    displayContent.textContent = str.substring(0, str.length-1)
 })
+// Decimal point button functionality
+function checkDecimal(){
+    decimalBtn.addEventListener('click', ()=>{
+        if (displayContent.textContent.includes(".")){
+            return
+        } else {displayContent.textContent += "."}
+    })
+}
+// square root btn functionality
+
+exponentBtn.addEventListener('click', ()=>{
+    if (displayContent.textContent){
+        let a = Number(displayContent.textContent)
+        displayContent.textContent = exponential2(a)
+        calcProcessDisplay.textContent = `${a}² =`
+    }
+    
+})
 
 
+plusMinusBtn.addEventListener('click', ()=>{
+    if (displayContent.textContent.includes('-')){
+        displayContent.textContent = displayContent.textContent.slice(1)
+    } else {
+        displayContent.textContent = "-" + displayContent.textContent
+    }
+})
 
+
+checkDecimal()
  calculate()
