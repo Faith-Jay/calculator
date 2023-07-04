@@ -73,12 +73,13 @@ function getOperator(btn) {
     btnText = "÷";
     operator = divide;
   }
-  // Checking for text longer than display screen (just because don't stress me biko)
-  if (displayContent.textContent.length > 12) {
+  // Checking if text longer than display screen to avoid complications (just because don't stress me biko)
+   if (displayContent.textContent.length > 12) {
     displayContent.textContent = "Dey play!😏";
     calcProcessDisplay.textContent = "I'm just a simple calculator🙄";
-    return;
-  }
+    setTimeout(reset, 650)
+    return
+  } 
   // Trying to make app calculate when operator is clicked after first set of calculations...
   if (firstVariable && !calcProcessDisplay.textContent.includes("=")) {
     if (displayContent.textContent === 0) return;
@@ -134,8 +135,9 @@ function checkDecimal() {
   }
 }
 
-// square root btn functionality
+// exponent btn functionality
 exponentBtn.addEventListener("click", () => {
+    checker()
   if (displayContent.textContent) {
     let a = Number(displayContent.textContent);
     displayContent.textContent = exponential2(a);
@@ -165,4 +167,11 @@ function handleKeyboardInput(e) {
 
 function reset(){
     displayContent.textContent = ''
+    calcProcessDisplay.textContent = ''
+}
+// Checking if text longer than display screen (just because don't stress me biko)
+function checker (){
+    if (displayContent.textContent === "Infinity"){
+        reset()
+      }
 }
