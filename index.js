@@ -37,6 +37,12 @@ function multiply(a, b) {
   return a * b;
 }
 function divide(a, b) {
+    if (b === 0){
+        displayContent.textContent = "Dey play!😏";
+        calcProcessDisplay.textContent = "";
+        setTimeout(reset, 750)
+        return
+    }
   return a / b;
 }
 function exponential2(a) {
@@ -155,4 +161,8 @@ function handleKeyboardInput(e) {
   if (e.key === "Escape") clear();
   if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/")
     getOperator(e.key);
+}
+
+function reset(){
+    displayContent.textContent = ''
 }
