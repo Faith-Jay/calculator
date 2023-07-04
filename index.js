@@ -1,138 +1,158 @@
-const displayContent = document.querySelector(".display-content")
-const calcProcessDisplay = document.querySelector(".calc-process")
-const allDigitBtns = document.querySelectorAll('.digit')
-const allOperatorBtns = document.querySelectorAll('.operand')
-const equalToBtn = document.querySelector('.equal-to-btn')
-const exponentBtn = document.querySelector('.exponent-btn')
-const clearBtn= document.querySelector('.clear-btn')
-const backspaceBtn = document.querySelector('.backspace-btn')
-const decimalBtn = document.querySelector('.decimal-btn')
-const plusMinusBtn =  document.querySelector('.plus-minus-btn')
-let firstVariable 
-let secondVariable
-let operator 
+const displayContent = document.querySelector(".display-content");
+const calcProcessDisplay = document.querySelector(".calc-process");
+const allDigitBtns = document.querySelectorAll(".digit");
+const allOperatorBtns = document.querySelectorAll(".operand");
+const equalToBtn = document.querySelector(".equal-to-btn");
+const exponentBtn = document.querySelector(".exponent-btn");
+const clearBtn = document.querySelector(".clear-btn");
+const backspaceBtn = document.querySelector(".backspace-btn");
+const decimalBtn = document.querySelector(".decimal-btn");
+const plusMinusBtn = document.querySelector(".plus-minus-btn");
+let firstVariable;
+let secondVariable;
+let operator;
+let prevOperand;
 
+document.addEventListener("keydown", handleKeyboardInput);
+clearBtn.addEventListener("click", clear);
+decimalBtn.addEventListener("click", checkDecimal);
+backspaceBtn.addEventListener("click", backSpace);
+equalToBtn.addEventListener("click", calculate);
 
-function add (a, b){
-    return +(a + b).toFixed(6)
+allDigitBtns.forEach((btn) => {
+  btn.addEventListener("click", () => updateDisplay(btn.value));
+});
+
+allOperatorBtns.forEach((btn) => {
+  btn.addEventListener("click", () => getOperator(btn.value));
+});
+
+function add(a, b) {
+  return a + b;
 }
-function subtract (a, b){
-    return +(a - b).toFixed(6)
+function subtract(a, b) {
+  return a - b;
 }
-function multiply (a, b){
-    return +(a * b).toFixed(6)
+function multiply(a, b) {
+  return a * b;
 }
-function divide (a, b){
-    return +(a / b).toFixed(6)
+function divide(a, b) {
+  return a / b;
 }
-function exponential2 (a){
-    return +(a * a).toFixed(6)
+function exponential2(a) {
+  return +(a * a).toFixed(6);
 }
- function operate (a, b, operated){
-   const result = operated (a, b);
-   return result
- }
+function operate(a, b, operated) {
+  const result = operated(a, b);
+  return +result.toFixed(6);
+}
 
- function updateDisplay(){
-    allDigitBtns.forEach((btn)=>{
-        btn.addEventListener('click', ()=>{
-           return displayContent.textContent += btn.value;
-        })
-    })
- }
+function updateDisplay(number) {
+  displayContent.textContent += number;
+}
 
- function getOperator(){
-    updateDisplay()
-    allOperatorBtns.forEach((btn)=>{
-        btn.addEventListener('click', ()=>{
-            if (btn.value === '+'){
-                operator = add
-            } else if (btn.value === '-'){
-                operator = subtract
-            } else if (btn.value === 'x'){
-                operator = multiply
-            } else if (btn.value === '÷'){
-                operator = divide
-            }
-            if(displayContent.textContent.length > 12){
-                displayContent.textContent = "Dey play!😏"
-                calcProcessDisplay.textContent = "I'm just a simple calculator🙄"
-                return
-            }
-            if (firstVariable && !calcProcessDisplay.textContent.includes('=')){
-                secondVariable = Number(displayContent.textContent)
-                const result = operate(firstVariable, secondVariable, operator)
-                calcProcessDisplay.textContent = `${result} ${btn.value}` 
-                displayContent.textContent = ''   
-                firstVariable = result       
-            } 
-            else{
-                firstVariable = Number(displayContent.textContent);
-                calcProcessDisplay.textContent = `${firstVariable} ${btn.value}`
-                displayContent.textContent = ''
-            }
-        })
-    })
- }
+function getOperator(btn) {
+  let btnText;
 
- function calculate (){
-    getOperator()
-    equalToBtn.addEventListener('click', ()=>{
-        if (calcProcessDisplay.textContent.includes('=') || !calcProcessDisplay.textContent){
-            return
-        }
-       secondVariable = Number(displayContent.textContent) 
-       calcProcessDisplay.textContent += ` ${secondVariable} =`
-       const result = operate(firstVariable, secondVariable, operator)
-       displayContent.textContent = result
-       firstVariable = result
-       secondVariable = 0
-    })
- }
+  if (btn === "+") {
+    btnText = "+";
+    operator = add;
+  } else if (btn === "-") {
+    btnText = "-";
+    operator = subtract;
+  } else if (btn === "*") {
+    btnText = "x";
+    operator = multiply;
+  } else if (btn === "/") {
+    btnText = "÷";
+    operator = divide;
+  }
+  // Checking for text longer than display screen (just because don't stress me biko)
+  if (displayContent.textContent.length > 12) {
+    displayContent.textContent = "Dey play!😏";
+    calcProcessDisplay.textContent = "I'm just a simple calculator🙄";
+    return;
+  }
+  // Trying to make app calculate when operator is clicked after first set of calculations...
+  if (firstVariable && !calcProcessDisplay.textContent.includes("=")) {
+    if (displayContent.textContent === 0) return;
+    secondVariable = Number(displayContent.textContent);
+    const result = operate(firstVariable, secondVariable, prevOperand);
+    calcProcessDisplay.textContent = `${result} ${btnText}`;
+    displayContent.textContent = "";
+    firstVariable = result;
+    prevOperand = operator;
+  } else {
+    prevOperand = operator;
+    firstVariable = Number(displayContent.textContent);
+    calcProcessDisplay.textContent = `${firstVariable} ${btnText}`;
+    displayContent.textContent = "";
+  }
+}
 
+function calculate() {
+  if (
+    calcProcessDisplay.textContent.includes("=") ||
+    !calcProcessDisplay.textContent
+  ) {
+    return;
+  }
+  secondVariable = Number(displayContent.textContent);
+  calcProcessDisplay.textContent += ` ${secondVariable} =`;
+  const result = operate(firstVariable, secondVariable, operator);
+  displayContent.textContent = result;
+  firstVariable = result;
+  secondVariable = 0;
+}
 
 // Clear Button Functionality
-
-clearBtn.addEventListener('click', ()=>{
-    firstVariable = 0
-    secondVariable = 0
-    displayContent.textContent = ''
-    calcProcessDisplay.textContent = ''
-})
+function clear() {
+  firstVariable = 0;
+  secondVariable = 0;
+  displayContent.textContent = "";
+  calcProcessDisplay.textContent = "";
+}
 
 // Backspace functionality
-backspaceBtn.addEventListener('click', ()=>{
-   let str = displayContent.textContent
-   displayContent.textContent = str.substring(0, str.length-1)
-})
+function backSpace() {
+  let str = displayContent.textContent;
+  displayContent.textContent = str.substring(0, str.length - 1);
+}
+
 // Decimal point button functionality
-function checkDecimal(){
-    decimalBtn.addEventListener('click', ()=>{
-        if (displayContent.textContent.includes(".")){
-            return
-        } else {displayContent.textContent += "."}
-    })
+function checkDecimal() {
+  if (displayContent.textContent.includes(".")) {
+    return;
+  } else {
+    displayContent.textContent += ".";
+  }
 }
 
 // square root btn functionality
-exponentBtn.addEventListener('click', ()=>{
-    if (displayContent.textContent){
-        let a = Number(displayContent.textContent)
-        displayContent.textContent = exponential2(a)
-        calcProcessDisplay.textContent = `${a}² =`
-    }
-    
-})
+exponentBtn.addEventListener("click", () => {
+  if (displayContent.textContent) {
+    let a = Number(displayContent.textContent);
+    displayContent.textContent = exponential2(a);
+    calcProcessDisplay.textContent = `${a}² =`;
+  }
+});
 
 // Plus Minus btn functionality
-plusMinusBtn.addEventListener('click', ()=>{
-    if (displayContent.textContent.includes('-')){
-        displayContent.textContent = displayContent.textContent.slice(1)
-    } else {
-        displayContent.textContent = "-" + displayContent.textContent
-    }
-})
+plusMinusBtn.addEventListener("click", () => {
+  if (displayContent.textContent.includes("-")) {
+    displayContent.textContent = displayContent.textContent.slice(1);
+  } else {
+    displayContent.textContent = "-" + displayContent.textContent;
+  }
+});
 
-
-checkDecimal()
- calculate()
+// Handling Keyboard Input
+function handleKeyboardInput(e) {
+  if (e.key >= 0 && e.key <= 9) updateDisplay(e.key);
+  if (e.key === ".") checkDecimal();
+  if (e.key === "=" || e.key === "Enter") calculate();
+  if (e.key === "Backspace") backSpace();
+  if (e.key === "Escape") clear();
+  if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/")
+    getOperator(e.key);
+}
