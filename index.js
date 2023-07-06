@@ -73,13 +73,7 @@ function getOperator(btn) {
     btnText = "÷";
     operator = divide;
   }
-  // Checking if text longer than display screen to avoid complications (just because don't stress me biko)
-   if (displayContent.textContent.length > 12) {
-    displayContent.textContent = "Dey play!😏";
-    calcProcessDisplay.textContent = "I'm just a simple calculator🙄";
-    setTimeout(reset, 650)
-    return
-  } 
+  checker()
   // Trying to make app calculate when operator is clicked after first set of calculations...
   if (firstVariable && !calcProcessDisplay.textContent.includes("=")) {
     if (displayContent.textContent === 0) return;
@@ -116,8 +110,7 @@ function calculate() {
 function clear() {
   firstVariable = 0;
   secondVariable = 0;
-  displayContent.textContent = "";
-  calcProcessDisplay.textContent = "";
+  reset()
 }
 
 // Backspace functionality
@@ -169,9 +162,9 @@ function reset(){
     displayContent.textContent = ''
     calcProcessDisplay.textContent = ''
 }
-// Checking if text longer than display screen (just because don't stress me biko)
+// Checking for infinity
 function checker (){
-    if (displayContent.textContent === "Infinity"){
+    if (displayContent.textContent.includes("Infinity")){
         reset()
       }
 }
